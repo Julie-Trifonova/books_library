@@ -1,24 +1,28 @@
 // create api
 // apply store
 
+// import 'dotenv/config'
 import {instance} from "./api";
+import {searchBooksType} from "../components/SearchForm";
 
 export const booksApi = {
     getAllBooksPage(
-        q: string,
-        q_optional: string,
-        download: string,
-        filter: string,
-        langRestrict: string,
-        libraryRestrict: string,
-        startIndex: number,
-        maxResults: number,
-        printType: string,
-        projection: string,
-        orderBy: string,
-        partner: string,
-        showPreorders: boolean,
-        source: string,
+        {
+            q,
+            q_optional,
+            download,
+            filter,
+            langRestrict,
+            libraryRestrict,
+            startIndex,
+            maxResults,
+            printType,
+            projection,
+            orderBy,
+            partner,
+            showPreorders,
+            source
+        }: searchBooksType
     ) {
         return instance.get(`v1/volumes/
         ?q=${q}
@@ -35,15 +39,12 @@ export const booksApi = {
         &partner=${partner}
         &showPreorders=${showPreorders}
         &source=${source}
-        &?key=`
+        &key=${process.env.NODE_ENV}`
         ).then((response) => response.data);
     },
-    getAllBooks(
-        maxResults: number,
-    ) {
+    getAllBooks() {
         return instance.get(`v1/volumes/
-        ?&maxResults=${maxResults}
-        &?key=`
+        ?key=${process.env.NODE_ENV}`
         ).then((response) => response.data);
     }
 }
