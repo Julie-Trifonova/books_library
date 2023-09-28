@@ -20,12 +20,11 @@ import {
 } from "../../redux/booksSelectors";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Preloader} from "../../assets/common/Preloader/Preloader";
-import {getBooks, getBooksPage} from "../../redux/booksReducer";
+import {getBooksPage} from "../../redux/booksReducer";
 import {searchBooksType, SearchForm} from "../SearchForm";
 import {bookType} from "../../types/types";
 import {BookCard} from "../BookCard";
 import {nanoid} from 'nanoid'
-import { env } from 'process'
 
 const BooksLibrary = () => {
     const allBooks = useSelector(getAllBooks)
@@ -109,32 +108,32 @@ const BooksLibrary = () => {
         } as searchBooksType
 
         dispatch(getBooksPage(actualPropsPage));
-        dispatch(getBooks())
+        console.log('useEffect 1')
+        // dispatch(getBooks())
     }, [currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
 
-    useEffect(() => {
-        navigate({
-            search:
-                `
-                currentPage=${currentPage}
-                q=${q}
-                +${q_optional}
-                &download=${download}
-                &filter=${filter}
-                &langRestrict=${langRestrict}
-                &libraryRestrict=${libraryRestrict}
-                &startIndex=${startIndex}
-                &maxResults=${maxResults}
-                &printType=${printType}
-                &projection=${projection}
-                &orderBy=${orderBy}
-                &partner=${partner}
-                &showPreorders=${showPreorders}
-                &source=${source}
-                `
-            // &?key=${process.env.NODE_ENV}
-        })
-    }, [navigate, currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
+    // useEffect(() => {
+    //     navigate({
+    //         search: `
+    //             currentPage=${currentPage}
+    //             q=${q}
+    //             +${q_optional}
+    //             &download=${download}
+    //             &filter=${filter}
+    //             &langRestrict=${langRestrict}
+    //             &libraryRestrict=${libraryRestrict}
+    //             &startIndex=${startIndex}
+    //             &maxResults=${maxResults}
+    //             &printType=${printType}
+    //             &projection=${projection}
+    //             &orderBy=${orderBy}
+    //             &partner=${partner}
+    //             &showPreorders=${showPreorders}
+    //             &source=${source}
+    //             &?key=${process.env.REACT_APP_API_KEY}
+    //             `
+    //     })
+    // }, [navigate, currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
 
     const onPageChanged = (pageNumber: number) => {
         // dispatch(getDocumentsIncomingCorrespondence());
@@ -153,16 +152,13 @@ const BooksLibrary = () => {
             <div>
                 <SearchForm onChangeSearchForm={onChangeSearchForm}/>
             </div>
-            {/*}*/}
             {/*<Paginator/>*/}
             <div>
                 bookCard
-                {console.log(allBooks)}
-                {console.log(process.env)}
                 {/*{allBooks.map((b: bookType) => <BookCard key={nanoid()} book={b}/>)}*/}
             </div>
             {/*<Paginator/>*/}
-
+            {/*}*/}
         </div>
     )
 }

@@ -9,7 +9,7 @@ let initialState = {
     currentPage: 1,
     totalBooksCount: "",
     searchBooksCount: "",
-    q: '',
+    q: 'alice',
     q_optional: '',
     download: '',
     filter: 'partial',
@@ -31,7 +31,8 @@ const booksReducer = createSlice({
     reducers: {
         setAllBooks: (state, action) => {
             // state.allBooks = action.allBooks;
-            state.allBooks = action.payload;
+            console.log(action, 'action books')
+            state.allBooks = action.payload.books;
         },
         setDeleteBook: (state, action) => {
             // state.allBooks = action.allBooks.filter((b: any) => b.id !== action.bookId);
@@ -119,25 +120,26 @@ export const { setAllBooks, setDeleteBook, setBook, setToggleIsFetching, setCurr
     = booksReducer.actions
 export default booksReducer.reducer
 
+// export const getBooks = (): any => async (dispatch: any) => {
+//     dispatch(setToggleIsFetching(true));
+    // const data = await booksApi.getAllBooks();
+    //
+    // dispatch(setTotalBooksCount(data.length));
+    // dispatch(setToggleIsFetching(false));
+// };
 
-export const getBooks = (): any => async (dispatch: any) => {
-    dispatch(setToggleIsFetching(true));
-
-    const data = await booksApi.getAllBooks();
-
-    dispatch(setTotalBooksCount(data.length));
-    dispatch(setToggleIsFetching(false));
-};
-
-export const getBooksPage = ({currentPage = 1, q = '', q_optional = '', download = '', filter = 'partial', langRestrict = '', libraryRestrict = 'no-restrict', startIndex = 0, maxResults = 10, printType = 'all', projection = 'full', orderBy = 'relevance', partner = '', showPreorders = false, source = ''})
+export const getBooksPage = ({currentPage = 1, q = 'alice', q_optional = '', download = '', filter = 'partial', langRestrict = '', libraryRestrict = 'no-restrict', startIndex = 0, maxResults = 10, printType = 'all', projection = 'full', orderBy = 'relevance', partner = '', showPreorders = false, source = ''})
     : any => async (dispatch: any) => {
     dispatch(setToggleIsFetching(true));
 
     const data = await booksApi.getAllBooksPage({q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source});
-
-    dispatch(setAllBooks(data));
-    dispatch(setSearchBooksCount(data.length));
-
+    console.log(
+        data, 'data in reducer'
+    )
+    // dispatch(setAllBooks({books: data.items}));
+    dispatch(setAllBooks({books: data}));
+    // dispatch(setSearchBooksCount({books: data.totalItems}));
+    dispatch(setSearchBooksCount(data));
     dispatch(setCurrentPage(currentPage));
     dispatch(setQ(q));
     dispatch(setQ_optional(q_optional));
@@ -154,6 +156,6 @@ export const getBooksPage = ({currentPage = 1, q = '', q_optional = '', download
     dispatch(setShowPreorders(showPreorders));
     dispatch(setSource(source));
 
-    // setBook, setDeleteBook
+    // setBook, setDeleteBook, setTotalBooksCount
     dispatch(setToggleIsFetching(false));
 };
