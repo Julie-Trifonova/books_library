@@ -3,12 +3,12 @@ import {createSlice} from "@reduxjs/toolkit";
 import {booksApi} from "../api/booksApi";
 
 let initialState = {
-    allBooks: [] as Array<bookType> | null,
+    allBooks: [5,5] as Array<bookType> | null | any,
     book: {} as bookType,
     isFetching: true,
     currentPage: 1,
-    totalBooksCount: "",
-    searchBooksCount: "",
+    totalBooksCount: 0,
+    searchBooksCount: 0,
     q: 'alice',
     q_optional: '',
     download: '',
@@ -32,7 +32,7 @@ const booksReducer = createSlice({
         setAllBooks: (state, action) => {
             // state.allBooks = action.allBooks;
             console.log(action, 'action books')
-            state.allBooks = action.payload.books;
+            state.allBooks = action.payload.allBooks;
         },
         setDeleteBook: (state, action) => {
             // state.allBooks = action.allBooks.filter((b: any) => b.id !== action.bookId);
@@ -120,24 +120,15 @@ export const { setAllBooks, setDeleteBook, setBook, setToggleIsFetching, setCurr
     = booksReducer.actions
 export default booksReducer.reducer
 
-// export const getBooks = (): any => async (dispatch: any) => {
-//     dispatch(setToggleIsFetching(true));
-    // const data = await booksApi.getAllBooks();
-    //
-    // dispatch(setTotalBooksCount(data.length));
-    // dispatch(setToggleIsFetching(false));
-// };
-
 export const getBooksPage = ({currentPage = 1, q = 'alice', q_optional = '', download = '', filter = 'partial', langRestrict = '', libraryRestrict = 'no-restrict', startIndex = 0, maxResults = 10, printType = 'all', projection = 'full', orderBy = 'relevance', partner = '', showPreorders = false, source = ''})
     : any => async (dispatch: any) => {
     dispatch(setToggleIsFetching(true));
 
     const data = await booksApi.getAllBooksPage({q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source});
-    console.log(
-        data, 'data in reducer'
-    )
+    console.log(data, 'data in reducer')
+
     // dispatch(setAllBooks({books: data.items}));
-    dispatch(setAllBooks({books: data}));
+    dispatch(setAllBooks({allBooks: data}));
     // dispatch(setSearchBooksCount({books: data.totalItems}));
     dispatch(setSearchBooksCount(data));
     dispatch(setCurrentPage(currentPage));

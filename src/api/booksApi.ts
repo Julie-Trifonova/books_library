@@ -1,56 +1,14 @@
-import fetchClient, {instance} from "./api";
+import {instance} from "./api";
 import {searchBooksType} from "../components/SearchForm";
-import axios from "axios";
 
 export const booksApi = {
-    getAllBooksPage(
-        {
-            q,
-            q_optional,
-            download,
-            filter,
-            langRestrict,
-            libraryRestrict,
-            startIndex,
-            maxResults,
-            printType,
-            projection,
-            orderBy,
-            partner,
-            showPreorders,
-            source
-        }: searchBooksType
+    getAllBooksPage (
+        {q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source}: searchBooksType
     ) {
-
-        const url = `
-        v1/volumes/
-        ?q=${q}
-        +${q_optional}
-        &download=${download}
-        &filter=${filter}
-        &langRestrict=${langRestrict}
-        &libraryRestrict=${libraryRestrict}
-        &startIndex=${startIndex}
-        &maxResults=${maxResults}
-        &printType=${printType}
-        &projection=${projection}
-        &orderBy=${orderBy}
-        &partner=${partner}
-        &showPreorders=${showPreorders}
-        &source=${source}
-        &key=${process.env.REACT_APP_API_KEY}
-        `
-        const urlTest = `v1/volumes/?q=alice&key=${process.env.REACT_APP_API_KEY}`
-        return
-        // fetchClient().get(url).then((response) => response.data);
-        // instance.get(urlTest).then((response) => response.data);
-        axios.get(`https://books.googleapis.com/books/v1/volumes/?q=alice&key=${process.env.REACT_APP_API_KEY}`).then((response) => response.data);
-    },
-    // getAllBooks() {
-    //     return instance.get(`v1/volumes/
-    //     ?key=${process.env.REACT_APP_API_KEY}`
-    //     ).then((response) => response.data);
-    // }
+    // &download=${download}
+        const url = `v1/volumes/?q=${q}+${q_optional}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&key=${process.env.REACT_APP_API_KEY}`
+        return instance.get(url).then((response) => response.data);
+    }
 }
 
 // Выполнение поиска не требует аутентификации,

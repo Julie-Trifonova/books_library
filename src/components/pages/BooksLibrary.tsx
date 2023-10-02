@@ -108,7 +108,7 @@ const BooksLibrary = () => {
         } as searchBooksType
 
         dispatch(getBooksPage(actualPropsPage));
-        console.log('useEffect 1')
+        console.log('useEffect 1', allBooks)
         // dispatch(getBooks())
     }, [currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
 
