@@ -1,62 +1,62 @@
 import {RootStateType} from "./reduxStore";
 
 export const getAllBooks = (state: RootStateType) => {
-    return state.allBooks.allBooks
+    return state.booksState.allBooks
 }
 export const getBook = (state: RootStateType) => {
-    return state.allBooks.book
+    return state.booksState.book
 }
 export const getIsFetching = (state: RootStateType) => {
-    return state.allBooks.isFetching
+    return state.booksState.isFetching
 }
 export const getCurrentPage = (state: RootStateType) => {
-    return state.allBooks.currentPage
+    return state.booksState.currentPage
 }
 export const getTotalBooksCount = (state: RootStateType) => {
-    return state.allBooks.totalBooksCount
+    return state.booksState.totalBooksCount
 }
 export const getSearchBooksCount = (state: RootStateType) => {
-    return state.allBooks.searchBooksCount
+    return state.booksState.searchBooksCount
 }
 export const getQ = (state: RootStateType) => {
-    return state.allBooks.q
+    return state.booksState.q
 }
 export const gerQ_optional = (state: RootStateType) => {
-    return state.allBooks.q_optional
+    return state.booksState.q_optional
 }
 export const getDownload = (state: RootStateType) => {
-    return state.allBooks.download
+    return state.booksState.download
 }
 export const getFilter = (state: RootStateType) => {
-    return state.allBooks.filter
+    return state.booksState.filter
 }
 export const getLangRestrict = (state: RootStateType) => {
-    return state.allBooks.langRestrict
+    return state.booksState.langRestrict
 }
 export const getLibraryRestrict = (state: RootStateType) => {
-    return state.allBooks.libraryRestrict
+    return state.booksState.libraryRestrict
 }
 export const getStartIndex = (state: RootStateType) => {
-    return state.allBooks.startIndex
+    return state.booksState.startIndex
 }
 export const getMaxResults = (state: RootStateType) => {
-    return state.allBooks.maxResults
+    return state.booksState.maxResults
 }
 export const getPrintType = (state: RootStateType) => {
-    return state.allBooks.printType
+    return state.booksState.printType
 }
 export const getProjection = (state: RootStateType) => {
-    return state.allBooks.projection
+    return state.booksState.projection
 }
 export const getOrderBy = (state: RootStateType) => {
-    return state.allBooks.orderBy
+    return state.booksState.orderBy
 }
 export const getPartner = (state: RootStateType) => {
-    return state.allBooks.partner
+    return state.booksState.partner
 }
 export const getShowPreorders = (state: RootStateType) => {
-    return state.allBooks.showPreorders
+    return state.booksState.showPreorders
 }
 export const getSource = (state: RootStateType) => {
-    return state.allBooks.source
+    return state.booksState.source
 }

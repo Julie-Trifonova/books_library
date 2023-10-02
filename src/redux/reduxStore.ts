@@ -4,7 +4,7 @@ import allBooksReducer from './booksReducer'
 const store = configureStore({
     reducer:
         {
-            allBooks: allBooksReducer,
+            booksState: allBooksReducer,
         }
 })
 
