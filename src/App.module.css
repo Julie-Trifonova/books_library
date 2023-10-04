@@ -1,0 +1,8 @@
+@font-face {
+    font-family: "Verdana";
+    src: url('./styles/fonts/Verdana/Verdana.ttf') format("ttf");
+}
+@font-face {
+    font-family: "AvantGarde";
+    src: url('./styles/fonts/AvantGarde/ofont.ru_AvantGarde.ttf') format("ttf");
+}

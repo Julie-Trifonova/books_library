@@ -1,4 +1,5 @@
 import React from "react";
+import s from "./SearchForm.module.css";
 
 type PropsType = {
     onChangeSearchForm: ({}: searchBooksType) => void;
@@ -26,9 +27,14 @@ const SearchForm:React.FC<PropsType> = ({onChangeSearchForm}) => {
 
     // currentPage = 1
     return (
-        <>
-            Here SearchForm
-        </>
+        <div>
+            <div className={s.title}>
+                Search for books
+            </div>
+            {/*input*/}
+            {/*categories*/}
+            {/*sorting*/}
+        </div>
     )
 }
 

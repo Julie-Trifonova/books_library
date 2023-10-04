@@ -1,11 +1,11 @@
 import React from "react";
 
-import * as preloaderImg from "../images/loading-circle.gif";
+import preloaderImg from "../images/loading-circle.gif";
 
 export const Preloader: React.FC = () => {
     return (
         <div>
-            <img src={`${preloaderImg}`} alt="" />
+            <img src={preloaderImg} alt="" />
         </div>
     );
 };

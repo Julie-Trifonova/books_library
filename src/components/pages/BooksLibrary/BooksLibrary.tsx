@@ -17,14 +17,15 @@ import {
     getQ, getShowPreorders, getSource,
     getStartIndex,
     getTotalBooksCount, getSearchBooksCount
-} from "../../redux/booksSelectors";
+} from "../../../redux/booksSelectors";
 import {useLocation, useNavigate} from "react-router-dom";
-import {Preloader} from "../../assets/common/Preloader/Preloader";
-import {getBooksPage} from "../../redux/booksReducer";
-import {searchBooksType, SearchForm} from "../SearchForm";
-import {bookType} from "../../types/types";
-import {BookCard} from "../BookCard";
+import {Preloader} from "../../../assets/common/Preloader/Preloader";
+import {getBooksPage} from "../../../redux/booksReducer";
+import {searchBooksType, SearchForm} from "../../SearchForm/SearchForm";
+import {bookType} from "../../../types/types";
+import {BookCard} from "../../BooksCard/BookCard";
 import {nanoid} from 'nanoid'
+import s from './BooksLibrary.module.css'
 
 const BooksLibrary = () => {
     const allBooks = useSelector(getAllBooks)
@@ -95,19 +96,19 @@ const BooksLibrary = () => {
 
         !!parsed.get("currentPage") && (actualCurrentPage = Number(parsed.get("currentPage")) as number)
         !!parsed.get("q") && (actualQ = parsed.get("q") as string)
-        !!parsed.get("q_optional") && (actualQ_optional = parsed.get("q_optional")  as string)
-        !!parsed.get("download") && (actualDownload = parsed.get("download")  as string)
-        !!parsed.get("filter") && (actualFilter = parsed.get("filter")  as string)
-        !!parsed.get("langRestrict") && (actualLangRestrict = parsed.get("langRestrict")  as string)
-        !!parsed.get("libraryRestrict") && (actualLibraryRestrict = parsed.get("libraryRestrict")  as string)
+        !!parsed.get("q_optional") && (actualQ_optional = parsed.get("q_optional") as string)
+        !!parsed.get("download") && (actualDownload = parsed.get("download") as string)
+        !!parsed.get("filter") && (actualFilter = parsed.get("filter") as string)
+        !!parsed.get("langRestrict") && (actualLangRestrict = parsed.get("langRestrict") as string)
+        !!parsed.get("libraryRestrict") && (actualLibraryRestrict = parsed.get("libraryRestrict") as string)
         !!parsed.get("startIndex") && (actualStartIndex = Number(parsed.get("startIndex")) as number)
         !!parsed.get("maxResults") && (actualMaxResults = Number(parsed.get("maxResults")) as number)
-        !!parsed.get("printType") && (actualPrintType = parsed.get("printType")  as string)
-        !!parsed.get("projection") && (actualProjection = parsed.get("projection")  as string)
-        !!parsed.get("orderBy") && (actualOrderBy = parsed.get("orderBy")  as string)
-        !!parsed.get("partner") && (actualPartner = parsed.get("partner")  as string)
+        !!parsed.get("printType") && (actualPrintType = parsed.get("printType") as string)
+        !!parsed.get("projection") && (actualProjection = parsed.get("projection") as string)
+        !!parsed.get("orderBy") && (actualOrderBy = parsed.get("orderBy") as string)
+        !!parsed.get("partner") && (actualPartner = parsed.get("partner") as string)
         !!parsed.get("showPreorders") && (actualShowPreorders = !!parsed.get("showPreorders") as boolean)
-        !!parsed.get("source") && (actualSource = parsed.get("source")  as string)
+        !!parsed.get("source") && (actualSource = parsed.get("source") as string)
 
         let actualPropsPage = {
             actualCurrentPage,
@@ -169,18 +170,27 @@ const BooksLibrary = () => {
 
     return (
         <div>
-            {/*{isFetching ? <Preloader /> :*/}
-            <div>
-                <SearchForm onChangeSearchForm={onChangeSearchForm}/>
-            </div>
-            {/*<Paginator/>*/}
-            <div>
-                bookCard
-                {(allBooks.length > 0) && allBooks.map((b: bookType) =>
-                    <BookCard key={b.id} book={b}/>)}
-            </div>
-            {/*<Paginator/>*/}
-            {/*}*/}
+            {isFetching
+                ? <Preloader/>
+                : <div className={s.booksLibrary}>
+                    {/*<Paginator/>*/}
+                    <div>
+                        <SearchForm onChangeSearchForm={onChangeSearchForm}/>
+                    </div>
+                    <div className={s.results}>
+                        {`Found ${searchBooksCount} results`}
+                        {/*<span>Found </span>*/}
+                        {/*<span>{searchBooksCount} </span>*/}
+                        {/*<span>results</span>*/}
+                    </div>
+                    <div className={s.books}>
+                        {
+                            (allBooks.length > 0) && allBooks.map((b: bookType) =>
+                            <BookCard key={b.id} book={b}/>)
+                        }
+                    </div>
+                </div>
+            }
         </div>
     )
 }

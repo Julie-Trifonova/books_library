@@ -1,5 +1,5 @@
 import {instance} from "./api";
-import {searchBooksType} from "../components/SearchForm";
+import {searchBooksType} from "../components/SearchForm/SearchForm";
 
 export const booksApi = {
     getAllBooksPage (
