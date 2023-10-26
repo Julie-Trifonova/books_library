@@ -20,7 +20,7 @@ import {
 } from "../../../redux/booksSelectors";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Preloader} from "../../../assets/common/Preloader/Preloader";
-import {getBooksPage} from "../../../redux/booksReducer";
+import {getBooksPage, newQType, setNewQ} from "../../../redux/booksReducer";
 import {searchBooksType, SearchForm} from "../../SearchForm/SearchForm";
 import {bookType} from "../../../types/types";
 import {BookCard} from "../../BooksCard/BookCard";
@@ -56,6 +56,40 @@ const BooksLibrary = () => {
 
     // const [allBooks, setAllBooks] = useState(useSelector(getAllBooks));
 
+    let actualCurrentPage = currentPage
+    let actualQ = q
+    let actualQ_optional = q_optional
+    let actualDownload = download
+    let actualFilter = filter
+    let actualLangRestrict = langRestrict
+    let actualLibraryRestrict = libraryRestrict
+    let actualStartIndex = startIndex
+    let actualMaxResults = maxResults
+    let actualPrintType = printType
+    let actualProjection = projection
+    let actualOrderBy = orderBy
+    let actualPartner = partner
+    let actualShowPreorders = showPreorders
+    let actualSource = source
+
+    let actualPropsPage = {
+        actualCurrentPage,
+        actualQ,
+        actualQ_optional,
+        actualDownload,
+        actualFilter,
+        actualLangRestrict,
+        actualLibraryRestrict,
+        actualStartIndex,
+        actualMaxResults,
+        actualPrintType,
+        actualProjection,
+        actualOrderBy,
+        actualPartner,
+        actualShowPreorders,
+        actualSource,
+    } as searchBooksType
+
     let propsPage = {
         currentPage,
         q,
@@ -75,24 +109,12 @@ const BooksLibrary = () => {
     }
 
     useEffect(() => {
+        dispatch(getBooksPage(propsPage));
+    }, [useEffect, currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
+
+    useEffect(() => {
 
         const parsed = new URLSearchParams(location.search.substring(1) as any);
-
-        let actualCurrentPage = currentPage
-        let actualQ = q
-        let actualQ_optional = q_optional
-        let actualDownload = download
-        let actualFilter = filter
-        let actualLangRestrict = langRestrict
-        let actualLibraryRestrict = libraryRestrict
-        let actualStartIndex = startIndex
-        let actualMaxResults = maxResults
-        let actualPrintType = printType
-        let actualProjection = projection
-        let actualOrderBy = orderBy
-        let actualPartner = partner
-        let actualShowPreorders = showPreorders
-        let actualSource = source
 
         !!parsed.get("currentPage") && (actualCurrentPage = Number(parsed.get("currentPage")) as number)
         !!parsed.get("q") && (actualQ = parsed.get("q") as string)
@@ -110,27 +132,22 @@ const BooksLibrary = () => {
         !!parsed.get("showPreorders") && (actualShowPreorders = !!parsed.get("showPreorders") as boolean)
         !!parsed.get("source") && (actualSource = parsed.get("source") as string)
 
-        let actualPropsPage = {
-            actualCurrentPage,
-            actualQ,
-            actualQ_optional,
-            actualDownload,
-            actualFilter,
-            actualLangRestrict,
-            actualLibraryRestrict,
-            actualStartIndex,
-            actualMaxResults,
-            actualPrintType,
-            actualProjection,
-            actualOrderBy,
-            actualPartner,
-            actualShowPreorders,
-            actualSource,
-        } as searchBooksType
-
         dispatch(getBooksPage(actualPropsPage));
-        // console.log('useEffect_1')
-    }, [useEffect, currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
+    }, [useEffect, actualCurrentPage,
+        actualQ,
+        actualQ_optional,
+        actualDownload,
+        actualFilter,
+        actualLangRestrict,
+        actualLibraryRestrict,
+        actualStartIndex,
+        actualMaxResults,
+        actualPrintType,
+        actualProjection,
+        actualOrderBy,
+        actualPartner,
+        actualShowPreorders,
+        actualSource])
 
     useEffect(() => {
         navigate({
@@ -154,19 +171,7 @@ const BooksLibrary = () => {
                 `
         })
         // dispatch(getBooksPage(propsPage));
-        // console.log('useEffect_2')
     }, [navigate, currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
-
-    const onPageChanged = (pageNumber: number) => {
-        // dispatch(getDocumentsIncomingCorrespondence());
-        // dispatch(
-        //     getDocumentsIncomingCorrespondencePage(pageNumber, pageSize, filter)
-        // );
-    };
-
-    const onChangeSearchForm = (props: searchBooksType) => {
-        return dispatch(getBooksPage(props));
-    }
 
     return (
         <div>
@@ -175,13 +180,16 @@ const BooksLibrary = () => {
                 : <div className={s.booksLibrary}>
                     {/*<Paginator/>*/}
                     <div>
-                        <SearchForm onChangeSearchForm={onChangeSearchForm}/>
+                        {/*<SearchFormReduxForm */}
+                        {/*    onSubmit={onSubmitSearchForm}*/}
+                        {/*    // initialValues={}*/}
+                        {/*/>*/}
+                        <SearchForm
+                            allBooks={allBooks}
+                        />
                     </div>
                     <div className={s.results}>
                         {`Found ${searchBooksCount} results`}
-                        {/*<span>Found </span>*/}
-                        {/*<span>{searchBooksCount} </span>*/}
-                        {/*<span>results</span>*/}
                     </div>
                     <div className={s.books}>
                         {

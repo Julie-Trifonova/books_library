@@ -1,6 +1,7 @@
 import {bookType} from "../types/types";
 import {createSlice} from "@reduxjs/toolkit";
 import {booksApi} from "../api/booksApi";
+import {searchBooksType} from "../components/SearchForm/SearchForm";
 
 let initialState = {
     allBooks: [] as Array<bookType>,
@@ -53,6 +54,7 @@ const booksReducer = createSlice({
         },
         setQ: (state, action) => {
             state.q = action.payload.q;
+            console.log(state.q, 'q')
         },
         setQ_optional: (state, action) => {
             state.q_optional = action.payload.q_optional;
@@ -96,15 +98,68 @@ const booksReducer = createSlice({
     }
 })
 
-export const { setAllBooks, setDeleteBook, setBook, setToggleIsFetching, setCurrentPage, setTotalBooksCount, setSearchBooksCount, setQ, setQ_optional, setDownload, setFilter, setLangRestrict, setLibraryRestrict, setStartIndex, setMaxResults, setPrintType, setProjection, setOrderBy, setPartner, setShowPreorders, setSource }
+export const {
+    setAllBooks,
+    setDeleteBook,
+    setBook,
+    setToggleIsFetching,
+    setCurrentPage,
+    setTotalBooksCount,
+    setSearchBooksCount,
+    setQ,
+    setQ_optional,
+    setDownload,
+    setFilter,
+    setLangRestrict,
+    setLibraryRestrict,
+    setStartIndex,
+    setMaxResults,
+    setPrintType,
+    setProjection,
+    setOrderBy,
+    setPartner,
+    setShowPreorders,
+    setSource
+}
     = booksReducer.actions
 export default booksReducer.reducer
 
-export const getBooksPage = ({currentPage = 1, q = 'alice', q_optional = '', download = '', filter = 'partial', langRestrict = '', libraryRestrict = 'no-restrict', startIndex = 0, maxResults = 10, printType = 'all', projection = 'full', orderBy = 'relevance', partner = '', showPreorders = false, source = ''})
+export const getBooksPage = ({
+                                 currentPage,
+                                 q,
+                                 q_optional,
+                                 download,
+                                 filter,
+                                 langRestrict,
+                                 libraryRestrict,
+                                 startIndex,
+                                 maxResults,
+                                 printType,
+                                 projection,
+                                 orderBy,
+                                 partner,
+                                 showPreorders,
+                                 source
+                             }: searchBooksType)
     : any => async (dispatch: any) => {
     dispatch(setToggleIsFetching({isFetching: true}));
 
-    const data = await booksApi.getAllBooksPage({q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source});
+    const data = await booksApi.getAllBooksPage({
+        q,
+        q_optional,
+        download,
+        filter,
+        langRestrict,
+        libraryRestrict,
+        startIndex,
+        maxResults,
+        printType,
+        projection,
+        orderBy,
+        partner,
+        showPreorders,
+        source
+    });
     // console.log(data, 'data in reducer')
 
     dispatch(setAllBooks({allBooks: data.items}));
@@ -128,3 +183,23 @@ export const getBooksPage = ({currentPage = 1, q = 'alice', q_optional = '', dow
     // setBook, setDeleteBook, setTotalBooksCount
     dispatch(setToggleIsFetching(false));
 };
+
+export type newQType = {
+    currentPage: number,
+    q: string,
+    q_optional: string
+}
+
+export const setNewQ = ({currentPage = 1, q = 'alice', q_optional = ''})
+    : any => async (dispatch: any) => {
+    dispatch(setCurrentPage({currentPage: currentPage}));
+    dispatch(setQ({q: q}));
+    dispatch(setQ_optional({q_optional: q_optional}));
+};
+
+// export const updateIncomingDocument =
+//     (documentId: number): any => async (dispatch: any, getState: any) => {
+//     const formData = getState().form.searchForm.values;
+//     // await booksApi.updatePage(formData);
+// };
+
