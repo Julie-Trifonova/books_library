@@ -181,20 +181,7 @@ export const getBooksPage = ({
     dispatch(setSource({source: source}));
 
     // setBook, setDeleteBook, setTotalBooksCount
-    dispatch(setToggleIsFetching(false));
-};
-
-export type newQType = {
-    currentPage: number,
-    q: string,
-    q_optional: string
-}
-
-export const setNewQ = ({currentPage = 1, q = 'alice', q_optional = ''})
-    : any => async (dispatch: any) => {
-    dispatch(setCurrentPage({currentPage: currentPage}));
-    dispatch(setQ({q: q}));
-    dispatch(setQ_optional({q_optional: q_optional}));
+    dispatch(setToggleIsFetching({isFetching: false}));
 };
 
 // export const updateIncomingDocument =

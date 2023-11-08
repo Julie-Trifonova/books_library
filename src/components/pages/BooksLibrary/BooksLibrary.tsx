@@ -20,7 +20,7 @@ import {
 } from "../../../redux/booksSelectors";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Preloader} from "../../../assets/common/Preloader/Preloader";
-import {getBooksPage, newQType, setNewQ} from "../../../redux/booksReducer";
+import {getBooksPage} from "../../../redux/booksReducer";
 import {searchBooksType, SearchForm} from "../../SearchForm/SearchForm";
 import {bookType} from "../../../types/types";
 import {BookCard} from "../../BooksCard/BookCard";
@@ -54,23 +54,23 @@ const BooksLibrary = () => {
     const navigate = useNavigate()
     let location = useLocation()
 
-    // const [allBooks, setAllBooks] = useState(useSelector(getAllBooks));
+    const parsed = new URLSearchParams(location.search.substring(1) as any);
 
-    let actualCurrentPage = currentPage
-    let actualQ = q
-    let actualQ_optional = q_optional
-    let actualDownload = download
-    let actualFilter = filter
-    let actualLangRestrict = langRestrict
-    let actualLibraryRestrict = libraryRestrict
-    let actualStartIndex = startIndex
-    let actualMaxResults = maxResults
-    let actualPrintType = printType
-    let actualProjection = projection
-    let actualOrderBy = orderBy
-    let actualPartner = partner
-    let actualShowPreorders = showPreorders
-    let actualSource = source
+    let actualCurrentPage = Number(parsed.get("currentPage")) as number
+    let actualQ = parsed.get("q") as string
+    let actualQ_optional = parsed.get("q_optional") as string
+    let actualDownload = parsed.get("download") as string
+    let actualFilter = parsed.get("filter") as string
+    let actualLangRestrict = parsed.get("langRestrict") as string
+    let actualLibraryRestrict = parsed.get("libraryRestrict") as string
+    let actualStartIndex = Number(parsed.get("startIndex")) as number
+    let actualMaxResults = Number(parsed.get("maxResults")) as number
+    let actualPrintType = parsed.get("printType") as string
+    let actualProjection = parsed.get("projection") as string
+    let actualOrderBy = parsed.get("orderBy") as string
+    let actualPartner = parsed.get("partner") as string
+    let actualShowPreorders = !!parsed.get("showPreorders") as boolean
+    let actualSource = parsed.get("source") as string
 
     let actualPropsPage = {
         actualCurrentPage,
@@ -110,30 +110,33 @@ const BooksLibrary = () => {
 
     useEffect(() => {
         dispatch(getBooksPage(propsPage));
-    }, [useEffect, currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
+        console.log('effect 1')
+    }, [
+        useEffect,
+        // propsPage
+        // currentPage,
+        // q,
+        // q_optional,
+        // download,
+        // filter,
+        // langRestrict,
+        // libraryRestrict,
+        // startIndex,
+        // maxResults,
+        // printType,
+        // projection,
+        // orderBy,
+        // partner,
+        // showPreorders,
+        // source
+    ])
 
     useEffect(() => {
-
-        const parsed = new URLSearchParams(location.search.substring(1) as any);
-
-        !!parsed.get("currentPage") && (actualCurrentPage = Number(parsed.get("currentPage")) as number)
-        !!parsed.get("q") && (actualQ = parsed.get("q") as string)
-        !!parsed.get("q_optional") && (actualQ_optional = parsed.get("q_optional") as string)
-        !!parsed.get("download") && (actualDownload = parsed.get("download") as string)
-        !!parsed.get("filter") && (actualFilter = parsed.get("filter") as string)
-        !!parsed.get("langRestrict") && (actualLangRestrict = parsed.get("langRestrict") as string)
-        !!parsed.get("libraryRestrict") && (actualLibraryRestrict = parsed.get("libraryRestrict") as string)
-        !!parsed.get("startIndex") && (actualStartIndex = Number(parsed.get("startIndex")) as number)
-        !!parsed.get("maxResults") && (actualMaxResults = Number(parsed.get("maxResults")) as number)
-        !!parsed.get("printType") && (actualPrintType = parsed.get("printType") as string)
-        !!parsed.get("projection") && (actualProjection = parsed.get("projection") as string)
-        !!parsed.get("orderBy") && (actualOrderBy = parsed.get("orderBy") as string)
-        !!parsed.get("partner") && (actualPartner = parsed.get("partner") as string)
-        !!parsed.get("showPreorders") && (actualShowPreorders = !!parsed.get("showPreorders") as boolean)
-        !!parsed.get("source") && (actualSource = parsed.get("source") as string)
-
         dispatch(getBooksPage(actualPropsPage));
-    }, [useEffect, actualCurrentPage,
+        console.log('effect 2')
+    }, [
+        useEffect,
+        actualCurrentPage,
         actualQ,
         actualQ_optional,
         actualDownload,
@@ -147,31 +150,32 @@ const BooksLibrary = () => {
         actualOrderBy,
         actualPartner,
         actualShowPreorders,
-        actualSource])
+        actualSource
+    ])
 
     useEffect(() => {
         navigate({
-            search: `
-                currentPage=${currentPage}
-                q=${q}
-                +${q_optional}
-                &download=${download}
-                &filter=${filter}
-                &langRestrict=${langRestrict}
-                &libraryRestrict=${libraryRestrict}
-                &startIndex=${startIndex}
-                &maxResults=${maxResults}
-                &printType=${printType}
-                &projection=${projection}
-                &orderBy=${orderBy}
-                &partner=${partner}
-                &showPreorders=${showPreorders}
-                &source=${source}
-                &?key=${process.env.REACT_APP_API_KEY}
-                `
+            search: `currentPage=${currentPage}&q=${q}&+${q_optional}&download=${download}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&?key=${process.env.REACT_APP_API_KEY}`
         })
         // dispatch(getBooksPage(propsPage));
-    }, [navigate, currentPage, q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source])
+    }, [
+        navigate,
+        // currentPage,
+        // q,
+        // q_optional,
+        // download,
+        // filter,
+        // langRestrict,
+        // libraryRestrict,
+        // startIndex,
+        // maxResults,
+        // printType,
+        // projection,
+        // orderBy,
+        // partner,
+        // showPreorders,
+        // source
+    ])
 
     return (
         <div>
@@ -193,7 +197,8 @@ const BooksLibrary = () => {
                     </div>
                     <div className={s.books}>
                         {
-                            (allBooks.length > 0) && allBooks.map((b: bookType) =>
+                            allBooks && (allBooks.length > 0) &&
+                            allBooks.map((b: bookType) =>
                             <BookCard key={b.id} book={b}/>)
                         }
                     </div>
