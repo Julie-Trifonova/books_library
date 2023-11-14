@@ -5,7 +5,7 @@ type PropsType = {
     trigger: any,
     menu: any,
 }
-const QOptionalDropdown: React.FC<PropsType> = ({trigger, menu}) => {
+export const DropdownList: React.FC<PropsType> = ({trigger, menu}) => {
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -38,4 +38,4 @@ const QOptionalDropdown: React.FC<PropsType> = ({trigger, menu}) => {
     )
 }
 
-export {QOptionalDropdown}
+// export {DropdownList};

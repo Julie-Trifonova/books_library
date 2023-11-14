@@ -39,61 +39,79 @@ const booksReducer = createSlice({
         },
         setBook: (state, action) => {
             state.book = action.payload.book;
+            console.log(state.book, 'action book')
         },
         setToggleIsFetching: (state, action) => {
             state.isFetching = action.payload.isFetching;
+            console.log(state.isFetching, 'action isFetching')
         },
         setCurrentPage: (state, action) => {
             state.currentPage = action.payload.currentPage;
+            console.log(state.currentPage, 'action currentPage')
         },
         setTotalBooksCount: (state, action) => {
             state.totalBooksCount = action.payload.totalBooksCount;
+            console.log(state.totalBooksCount, 'action totalBooksCount')
         },
         setSearchBooksCount: (state, action) => {
             state.searchBooksCount = action.payload.searchBooksCount;
+            console.log(state.searchBooksCount, 'action searchBooksCount')
         },
         setQ: (state, action) => {
             state.q = action.payload.q;
-            console.log(state.q, 'q')
+            console.log(state.q, 'action q')
         },
         setQ_optional: (state, action) => {
             state.q_optional = action.payload.q_optional;
+            console.log(state.q_optional, 'action q_optional')
         },
         setDownload: (state, action) => {
             state.download = action.payload.download;
+            console.log(state.download, 'action download')
         },
         setFilter: (state, action) => {
             state.filter = action.payload.filter;
+            console.log(state.filter, 'action filter')
         },
         setLangRestrict: (state, action) => {
             state.langRestrict = action.payload.langRestrict;
+            console.log(state.langRestrict, 'action langRestrict')
         },
         setLibraryRestrict: (state, action) => {
             state.libraryRestrict = action.payload.libraryRestrict;
+            console.log(state.libraryRestrict, 'action libraryRestrict')
         },
         setStartIndex: (state, action) => {
             state.startIndex = action.payload.startIndex;
+            console.log(state.startIndex, 'action startIndex')
         },
         setMaxResults: (state, action) => {
             state.maxResults = action.payload.maxResults;
+            console.log(state.maxResults, 'action maxResults')
         },
         setPrintType: (state, action) => {
             state.printType = action.payload.printType;
+            console.log(state.printType, 'action printType')
         },
         setProjection: (state, action) => {
             state.projection = action.payload.projection;
+            console.log(state.projection, 'action projection')
         },
         setOrderBy: (state, action) => {
             state.orderBy = action.payload.orderBy;
+            console.log(state.orderBy, 'action orderBy')
         },
         setPartner: (state, action) => {
             state.partner = action.payload.partner;
+            console.log(state.partner, 'action partner')
         },
         setShowPreorders: (state, action) => {
             state.showPreorders = action.payload.showPreorders;
+            console.log(state.showPreorders, 'action showPreorders')
         },
         setSource: (state, action) => {
             state.source = action.payload.source
+            console.log(state.source, 'action source')
         },
     }
 })
@@ -143,7 +161,7 @@ export const getBooksPage = ({
                              }: searchBooksType)
     : any => async (dispatch: any) => {
     dispatch(setToggleIsFetching({isFetching: true}));
-
+console.log('dispatch page', q)
     const data = await booksApi.getAllBooksPage({
         q,
         q_optional,
@@ -159,27 +177,30 @@ export const getBooksPage = ({
         partner,
         showPreorders,
         source
-    });
-    // console.log(data, 'data in reducer')
+    } as searchBooksType);
 
-    dispatch(setAllBooks({allBooks: data.items}));
-    dispatch(setSearchBooksCount({searchBooksCount: Number(data.totalItems)}));
-    dispatch(setCurrentPage({currentPage: currentPage}));
-    dispatch(setQ({q: q}));
-    dispatch(setQ_optional({q_optional: q_optional}));
-    dispatch(setDownload({download: download}));
-    dispatch(setFilter({filter: filter}));
-    dispatch(setLangRestrict({langRestrict: langRestrict}));
-    dispatch(setLibraryRestrict({libraryRestrict: libraryRestrict}));
-    dispatch(setStartIndex({startIndex: startIndex}));
-    dispatch(setMaxResults({maxResults: maxResults}));
-    dispatch(setPrintType({printType: printType}));
-    dispatch(setProjection({projection: projection}));
-    dispatch(setOrderBy({orderBy: orderBy}));
-    dispatch(setPartner({partner: partner}));
-    dispatch(setShowPreorders({showPreorders: showPreorders}));
-    dispatch(setSource({source: source}));
+    // console.log(data, 'data')
+    // if (data.items && typeof data.items !== 'undefined') {
 
+        dispatch(setAllBooks({allBooks: data.items}));
+        dispatch(setSearchBooksCount({searchBooksCount: Number(data.totalItems)}));
+        // dispatch(setCurrentPage({currentPage: currentPage}));
+        // dispatch(setQ({q: q}));
+        // dispatch(setQ_optional({q_optional: q_optional}));
+        // dispatch(setDownload({download: download}));
+        // dispatch(setFilter({filter: filter}));
+        // dispatch(setLangRestrict({langRestrict: langRestrict}));
+        // dispatch(setLibraryRestrict({libraryRestrict: libraryRestrict}));
+        // dispatch(setStartIndex({startIndex: startIndex}));
+        // dispatch(setMaxResults({maxResults: maxResults}));
+        // dispatch(setPrintType({printType: printType}));
+        // dispatch(setProjection({projection: projection}));
+        // dispatch(setOrderBy({orderBy: orderBy}));
+        // dispatch(setPartner({partner: partner}));
+        // dispatch(setShowPreorders({showPreorders: showPreorders}));
+        // dispatch(setSource({source: source}));
+
+    // }
     // setBook, setDeleteBook, setTotalBooksCount
     dispatch(setToggleIsFetching({isFetching: false}));
 };

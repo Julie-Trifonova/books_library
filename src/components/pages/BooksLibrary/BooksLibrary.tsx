@@ -56,6 +56,22 @@ const BooksLibrary = () => {
 
     const parsed = new URLSearchParams(location.search.substring(1) as any);
 
+    // let actualCurrentPage = Number(parsed.get("currentPage")) as number
+    // let actualQ = parsed.get("q") as string
+    // let actualQ_optional = parsed.get("q_optional") as string
+    // let actualDownload = parsed.get("download") as string
+    // let actualFilter = parsed.get("filter") as string
+    // let actualLangRestrict = parsed.get("langRestrict") as string
+    // let actualLibraryRestrict = parsed.get("libraryRestrict") as string
+    // let actualStartIndex = Number(parsed.get("startIndex")) as number
+    // let actualMaxResults = Number(parsed.get("maxResults")) as number
+    // let actualPrintType = parsed.get("printType") as string
+    // let actualProjection = parsed.get("projection") as string
+    // let actualOrderBy = parsed.get("orderBy") as string
+    // let actualPartner = parsed.get("partner") as string
+    // let actualShowPreorders = !!parsed.get("showPreorders") as boolean
+    // let actualSource = parsed.get("source") as string
+
     let actualCurrentPage = Number(parsed.get("currentPage")) as number
     let actualQ = parsed.get("q") as string
     let actualQ_optional = parsed.get("q_optional") as string
@@ -88,7 +104,7 @@ const BooksLibrary = () => {
         actualPartner,
         actualShowPreorders,
         actualSource,
-    } as searchBooksType
+    } as unknown as searchBooksType
 
     let propsPage = {
         currentPage,
@@ -109,8 +125,13 @@ const BooksLibrary = () => {
     }
 
     useEffect(() => {
-        dispatch(getBooksPage(propsPage));
-        console.log('effect 1')
+        if (!actualQ || actualQ === q) {
+            dispatch(getBooksPage(propsPage));
+            console.log('effect 1')
+            navigate({
+                search: `currentPage=${currentPage}&q=${q}&+${q_optional}&download=${download}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&?key=${process.env.REACT_APP_API_KEY}`
+            })
+        }
     }, [
         useEffect,
         // propsPage
@@ -132,10 +153,17 @@ const BooksLibrary = () => {
     ])
 
     useEffect(() => {
-        dispatch(getBooksPage(actualPropsPage));
-        console.log('effect 2')
+        if (actualQ && actualQ !== q) {
+            navigate({
+                search: `currentPage=${actualCurrentPage}&q=${actualQ}&+${actualQ_optional}&download=${actualDownload}&filter=${actualFilter}&langRestrict=${actualLangRestrict}&libraryRestrict=${actualLibraryRestrict}&startIndex=${actualStartIndex}&maxResults=${actualMaxResults}&printType=${actualPrintType}&projection=${actualProjection}&orderBy=${orderBy}&partner=${actualPartner}&showPreorders=${actualShowPreorders}&source=${actualSource}&?key=${process.env.REACT_APP_API_KEY}`
+            })
+            dispatch(getBooksPage(actualPropsPage));
+            console.log('effect 2', actualQ, q, actualPropsPage)
+        }
     }, [
         useEffect,
+        // allBooks,
+        // q,
         actualCurrentPage,
         actualQ,
         actualQ_optional,
@@ -154,9 +182,10 @@ const BooksLibrary = () => {
     ])
 
     useEffect(() => {
-        navigate({
-            search: `currentPage=${currentPage}&q=${q}&+${q_optional}&download=${download}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&?key=${process.env.REACT_APP_API_KEY}`
-        })
+        // navigate({
+        //     search: `currentPage=${currentPage}&q=${q}&+${q_optional}&download=${download}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&?key=${process.env.REACT_APP_API_KEY}`
+        // })
+
         // dispatch(getBooksPage(propsPage));
     }, [
         navigate,
@@ -193,13 +222,29 @@ const BooksLibrary = () => {
                         />
                     </div>
                     <div className={s.results}>
-                        {`Found ${searchBooksCount} results`}
+                        {/*{`Found ${searchBooksCount} results`}*/}
+                        {
+                            allBooks
+                            && (allBooks.length > 0)
+                            && ((actualDownload === 'epub' || download === 'epub')
+                                ? `Found ${allBooks.filter((b: bookType) => !!b.accessInfo.epub.isAvailable).length} results`
+                                : (actualDownload === 'pdf' || download === 'pdf')
+                                ? `Found ${allBooks.filter((b: bookType) => !!b.accessInfo.pdf.isAvailable).length} results`
+                                : `Found ${allBooks.length} results`)
+                        }
                     </div>
                     <div className={s.books}>
                         {
-                            allBooks && (allBooks.length > 0) &&
-                            allBooks.map((b: bookType) =>
-                            <BookCard key={b.id} book={b}/>)
+                            allBooks
+                            && (allBooks.length > 0)
+                            && ((actualDownload === 'epub' || download === 'epub')
+                                ? allBooks.filter((b: bookType) => !!b.accessInfo.epub.isAvailable)
+                                    .map((b: bookType) => <BookCard key={b.id} book={b}/>)
+                            : (actualDownload === 'pdf' || download === 'pdf') ? allBooks.filter((b: bookType) => !!b.accessInfo.pdf.isAvailable)
+                                        .map((b: bookType) => <BookCard key={b.id} book={b}/>)
+                            : allBooks.map((b: bookType) => <BookCard key={b.id} book={b}/>))
+                            // && allBooks.map((b: bookType) =>
+                            // <BookCard key={b.id} book={b}/>)
                         }
                     </div>
                 </div>

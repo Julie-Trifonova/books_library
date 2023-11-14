@@ -6,8 +6,8 @@ export const booksApi = {
         {q, q_optional, download, filter, langRestrict, libraryRestrict, startIndex, maxResults, printType, projection, orderBy, partner, showPreorders, source}: searchBooksType
     ) {
     // &download=${download}
-        const url = `v1/volumes/?q=${q}+${q_optional}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&key=${process.env.REACT_APP_API_KEY}`
-        // const url = `v1/volumes/?q=${q}&key=${process.env.REACT_APP_API_KEY}`
+    //     const url = `v1/volumes/?q=${q}+${q_optional}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&key=${process.env.REACT_APP_API_KEY}`
+        const url = `v1/volumes/?q=${q}&key=${process.env.REACT_APP_API_KEY}`
         return instance.get(url).then((response) => response.data);
     }
 }
@@ -19,27 +19,6 @@ export const booksApi = {
 // каждый том будет содержать информацию о пользователе,
 // такую ​​как статус покупки.
 
-// q=''+'parameter'
-// q=flowers+inauthor
-// parameter:
-//     intitle: текст находится в заголовке.
-//     inauthor: текст найден у автора.
-//     inpublisher: текст найден в издателе.
-//     subject: текст указан в списке категорий тома.
-//     isbn: текст является номером ISBN.
-//     lccn: текст является контрольным номером Библиотеки Конгресса.
-//     oclc: текст является номером центра компьютерной онлайн-библиотеки.
-
-// download=epub
-
-// filter:
-//     partial — хотя бы часть текста доступна для предварительного просмотра.
-//     full — виден весь текст.
-//     free-ebooks — бесплатные электронные книги Google.
-//     paid-ebooks — являются электронными книгами Google с указанием цены.
-//     ebooks — являются электронными книгами Google, платными или бесплатными.
-//     Примерами неэлектронных книг может быть контент издателя, доступный в ограниченном
-// предварительном просмотре и не предназначенный для продажи, или журналы.
 
 // langRestrict: Ограничить результаты книгами с этим языковым кодом
 
