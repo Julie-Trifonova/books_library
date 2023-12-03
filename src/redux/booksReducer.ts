@@ -7,6 +7,7 @@ let initialState = {
     allBooks: [] as Array<bookType>,
     book: {} as bookType,
     isFetching: true,
+    pageSize: 10,
     currentPage: 1,
     totalBooksCount: 0,
     searchBooksCount: 0,
@@ -17,7 +18,7 @@ let initialState = {
     langRestrict: '',
     libraryRestrict: 'no-restrict',
     startIndex: 0,
-    maxResults: 10,
+    maxResults: 40,
     printType: 'all',
     projection: 'full',
     orderBy: 'relevance',
@@ -44,6 +45,10 @@ const booksReducer = createSlice({
         setToggleIsFetching: (state, action) => {
             state.isFetching = action.payload.isFetching;
             console.log(state.isFetching, 'action isFetching')
+        },
+        setPageSize: (state, action) => {
+            state.pageSize = action.payload.pageSize;
+            console.log(state.isFetching, 'action pageSize')
         },
         setCurrentPage: (state, action) => {
             state.currentPage = action.payload.currentPage;
@@ -121,6 +126,7 @@ export const {
     setDeleteBook,
     setBook,
     setToggleIsFetching,
+    setPageSize,
     setCurrentPage,
     setTotalBooksCount,
     setSearchBooksCount,
@@ -179,7 +185,7 @@ console.log('dispatch page', q)
         source
     } as searchBooksType);
 
-    // console.log(data, 'data')
+    console.log(data, 'data')
     // if (data.items && typeof data.items !== 'undefined') {
 
         dispatch(setAllBooks({allBooks: data.items}));

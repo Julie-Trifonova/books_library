@@ -16,21 +16,25 @@ import {
     getProjection,
     getQ, getShowPreorders, getSource,
     getStartIndex,
-    getTotalBooksCount, getSearchBooksCount
+    getTotalBooksCount, getSearchBooksCount, getPageSize
 } from "../../../redux/booksSelectors";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Preloader} from "../../../assets/common/Preloader/Preloader";
-import {getBooksPage} from "../../../redux/booksReducer";
+import {getBooksPage, setCurrentPage} from "../../../redux/booksReducer";
 import {searchBooksType, SearchForm} from "../../SearchForm/SearchForm";
 import {bookType} from "../../../types/types";
 import {BookCard} from "../../BooksCard/BookCard";
 import {nanoid} from 'nanoid'
 import s from './BooksLibrary.module.css'
+import {usePagination} from "../../../assets/common/usePagination/usePagination";
+import {Box, List, Pagination} from "@mui/material";
 
 const BooksLibrary = () => {
+
     const allBooks = useSelector(getAllBooks)
     const book = useSelector(getBook)
     const isFetching = useSelector(getIsFetching)
+    const pageSize = useSelector(getPageSize)
     const totalBooksCount = useSelector(getTotalBooksCount)
     const searchBooksCount = useSelector(getSearchBooksCount)
 
@@ -55,22 +59,6 @@ const BooksLibrary = () => {
     let location = useLocation()
 
     const parsed = new URLSearchParams(location.search.substring(1) as any);
-
-    // let actualCurrentPage = Number(parsed.get("currentPage")) as number
-    // let actualQ = parsed.get("q") as string
-    // let actualQ_optional = parsed.get("q_optional") as string
-    // let actualDownload = parsed.get("download") as string
-    // let actualFilter = parsed.get("filter") as string
-    // let actualLangRestrict = parsed.get("langRestrict") as string
-    // let actualLibraryRestrict = parsed.get("libraryRestrict") as string
-    // let actualStartIndex = Number(parsed.get("startIndex")) as number
-    // let actualMaxResults = Number(parsed.get("maxResults")) as number
-    // let actualPrintType = parsed.get("printType") as string
-    // let actualProjection = parsed.get("projection") as string
-    // let actualOrderBy = parsed.get("orderBy") as string
-    // let actualPartner = parsed.get("partner") as string
-    // let actualShowPreorders = !!parsed.get("showPreorders") as boolean
-    // let actualSource = parsed.get("source") as string
 
     let actualCurrentPage = Number(parsed.get("currentPage")) as number
     let actualQ = parsed.get("q") as string
@@ -134,22 +122,6 @@ const BooksLibrary = () => {
         }
     }, [
         useEffect,
-        // propsPage
-        // currentPage,
-        // q,
-        // q_optional,
-        // download,
-        // filter,
-        // langRestrict,
-        // libraryRestrict,
-        // startIndex,
-        // maxResults,
-        // printType,
-        // projection,
-        // orderBy,
-        // partner,
-        // showPreorders,
-        // source
     ])
 
     useEffect(() => {
@@ -162,8 +134,6 @@ const BooksLibrary = () => {
         }
     }, [
         useEffect,
-        // allBooks,
-        // q,
         actualCurrentPage,
         actualQ,
         actualQ_optional,
@@ -189,60 +159,56 @@ const BooksLibrary = () => {
         // dispatch(getBooksPage(propsPage));
     }, [
         navigate,
-        // currentPage,
-        // q,
-        // q_optional,
-        // download,
-        // filter,
-        // langRestrict,
-        // libraryRestrict,
-        // startIndex,
-        // maxResults,
-        // printType,
-        // projection,
-        // orderBy,
-        // partner,
-        // showPreorders,
-        // source
     ])
+
+    // let [currentPageNumber, setCurrentPageNumber] = useState(1);
+
+    const count = Math.ceil(maxResults / pageSize);
+    const _DATA = usePagination(allBooks, pageSize, startIndex); // проверить работоспособность при изменении к-ва страниц в форме. Возможно добавить selector в usePagination
+
+    const handleChange = (e: any, p: number) => {
+        dispatch(setCurrentPage(p));
+        _DATA.jump(p);
+    };
 
     return (
         <div>
             {isFetching
                 ? <Preloader/>
                 : <div className={s.booksLibrary}>
-                    {/*<Paginator/>*/}
-                    <div>
-                        {/*<SearchFormReduxForm */}
-                        {/*    onSubmit={onSubmitSearchForm}*/}
-                        {/*    // initialValues={}*/}
-                        {/*/>*/}
-                        <SearchForm
-                            allBooks={allBooks}
-                        />
-                    </div>
+                    {/*<SearchFormReduxForm */}
+                    {/*    onSubmit={onSubmitSearchForm}*/}
+                    {/*    // initialValues={}*/}
+                    {/*/>*/}
+                    <SearchForm allBooks={allBooks}/>
                     <div className={s.results}>
-                        {/*{`Found ${searchBooksCount} results`}*/}
                         {
                             allBooks
                             && (allBooks.length > 0)
                             && ((actualDownload === 'epub' || download === 'epub')
                                 ? `Found ${allBooks.filter((b: bookType) => !!b.accessInfo.epub.isAvailable).length} results`
                                 : (actualDownload === 'pdf' || download === 'pdf')
-                                ? `Found ${allBooks.filter((b: bookType) => !!b.accessInfo.pdf.isAvailable).length} results`
-                                : `Found ${allBooks.length} results`)
+                                    ? `Found ${allBooks.filter((b: bookType) => !!b.accessInfo.pdf.isAvailable).length} results`
+                                    : `Found ${searchBooksCount} results`)
                         }
                     </div>
+                    <Pagination count={count}
+                                size="large"
+                                page={currentPage}
+                                variant="outlined"
+                                shape="rounded"
+                                onChange={handleChange}/>
+                    {/*<List>*/}
                     <div className={s.books}>
                         {
-                            allBooks
-                            && (allBooks.length > 0)
+                            _DATA.currentData()
+                            && (_DATA.currentData().length > 0)
                             && ((actualDownload === 'epub' || download === 'epub')
-                                ? allBooks.filter((b: bookType) => !!b.accessInfo.epub.isAvailable)
+                                ? _DATA.currentData().filter((b: bookType) => !!b.accessInfo.epub.isAvailable)
                                     .map((b: bookType) => <BookCard key={b.id} book={b}/>)
-                            : (actualDownload === 'pdf' || download === 'pdf') ? allBooks.filter((b: bookType) => !!b.accessInfo.pdf.isAvailable)
+                                : (actualDownload === 'pdf' || download === 'pdf') ? _DATA.currentData().filter((b: bookType) => !!b.accessInfo.pdf.isAvailable)
                                         .map((b: bookType) => <BookCard key={b.id} book={b}/>)
-                            : allBooks.map((b: bookType) => <BookCard key={b.id} book={b}/>))
+                                    : _DATA.currentData().map((b: bookType) => <BookCard key={b.id} book={b}/>))
                             // && allBooks.map((b: bookType) =>
                             // <BookCard key={b.id} book={b}/>)
                         }

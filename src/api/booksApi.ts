@@ -7,9 +7,10 @@ export const booksApi = {
     ) {
     // &download=${download}
     //     const url = `v1/volumes/?q=${q}+${q_optional}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&key=${process.env.REACT_APP_API_KEY}`
-        const url = `v1/volumes/?q=${q}&key=${process.env.REACT_APP_API_KEY}`
+        const url = `v1/volumes/?q=${q}&startIndex=${startIndex}&maxResults=${40}&key=${process.env.REACT_APP_API_KEY}`
         return instance.get(url).then((response) => response.data);
     }
+    // https://books.googleapis.com/books/v1/volumes/?q=${q}&maxResults=60&key=AIzaSyBZtv8srRXwPC-CliYEIZ7Td_6YfziHvl8
 }
 
 // Выполнение поиска не требует аутентификации,

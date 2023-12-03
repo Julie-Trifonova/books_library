@@ -9,6 +9,9 @@ export const getBook = (state: RootStateType) => {
 export const getIsFetching = (state: RootStateType) => {
     return state.booksState.isFetching
 }
+export const getPageSize = (state: RootStateType) => {
+    return state.booksState.pageSize
+}
 export const getCurrentPage = (state: RootStateType) => {
     return state.booksState.currentPage
 }

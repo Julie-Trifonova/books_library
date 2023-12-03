@@ -1,6 +1,3 @@
-//filter from 1000 books, not from 10 in one page
-// input text not works
-
 import React, {useEffect, useState} from "react";
 import s from "./SearchForm.module.css";
 import {Checkbox, TextField} from "@mui/material";
@@ -93,7 +90,7 @@ const SearchForm: React.FC<PropsType> = ({allBooks}) => {
         langRestrict: '',
         libraryRestrict: 'no-restrict',
         startIndex: 0,
-        maxResults: 10,
+        maxResults: 40,
         printType: 'all',
         projection: 'full',
         orderBy: 'relevance',
