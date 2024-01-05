@@ -166,15 +166,16 @@ const BooksLibrary = () => {
         navigate,
     ])
 
-    // let [currentPageNumber, setCurrentPageNumber] = useState(1);
-
     // const count = Math.ceil(maxResults / pageSize);
-    const count = Math.ceil(searchBooksCount / pageSize);
-    const _DATA = usePagination(allBooks, pageSize, searchBooksCount);
-
+    // const count = Math.ceil(searchBooksCount / pageSize);
+    // const _DATA = usePagination(allBooks, pageSize, searchBooksCount);
     // const handleChange = (e: any, p: number) => {
-    //     dispatch(setStartIndex({startIndex: startIndex + 39}))
-    //     dispatch(getBooksPage(propsPage))
+    //     if (searchBooksCount > (startIndex + 40)) {
+    //         dispatch(setStartIndex({startIndex: (startIndex + 40)}))
+    //         dispatch(getBooksPage(propsPage))
+    //     } else {
+    //         dispatch(setStartIndex({startIndex: 0}))
+    //     }
     //     dispatch(setCurrentPage({currentPage: p}));
     //     setPage(p)
     //     _DATA.jump(p);
@@ -184,10 +185,8 @@ const BooksLibrary = () => {
         if (searchBooksCount > (startIndex + 40)) {
             dispatch(setStartIndex({startIndex: (startIndex + 40)}))
             dispatch(getBooksPage(propsPage))
-            // dispatch(setHasMore({hasMore: true}))
         } else {
             dispatch(setStartIndex({startIndex: 0}))
-            // dispatch(setHasMore({hasMore: false}))
         }
     }
 
@@ -207,16 +206,6 @@ const BooksLibrary = () => {
                 endMessage={<img
                     // className={styles.end_gif}
                     src={gif} alt="gif" />}
-
-                // refreshFunction={this.refresh}
-                // pullDownToRefresh
-                // pullDownToRefreshThreshold={50}
-                // pullDownToRefreshContent={
-                //     <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-                // }
-                // releaseToRefreshContent={
-                //     <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-                // }
             >
             {isFetching
                 ? <Preloader/>
