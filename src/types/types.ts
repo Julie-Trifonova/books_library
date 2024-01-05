@@ -8,23 +8,23 @@ export type bookType = {
 }
 
 export type volumeInfoType = {
-    title: string;
-    authors: string;
-    publisher: string;
-    publishedDate: string;
-    description: string;
-    pageCount: number;
-    printType: string;
-    categories: Array<string>;
-    allowAnonLogging: boolean;
-    imageLinks: {
-        smallThumbnail: string,
-        thumbnail: string,
+    title?: string;
+    authors?: string;
+    publisher?: string;
+    publishedDate?: string;
+    description?: string;
+    pageCount?: number;
+    printType?: string;
+    categories?: Array<string>;
+    allowAnonLogging?: boolean;
+    imageLinks?: {
+        smallThumbnail?: string,
+        thumbnail?: string,
     },
-    language: string;
-    previewLink: string;
-    infoLink: string;
-    canonicalVolumeLink: string;
+    language?: string;
+    previewLink?: string;
+    infoLink?: string;
+    canonicalVolumeLink?: string;
 }
 
 export type saleInfo = {

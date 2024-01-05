@@ -2,12 +2,14 @@ import {bookType} from "../types/types";
 import {createSlice} from "@reduxjs/toolkit";
 import {booksApi} from "../api/booksApi";
 import {searchBooksType} from "../components/SearchForm/SearchForm";
+import {all} from "axios";
 
 let initialState = {
     allBooks: [] as Array<bookType>,
     book: {} as bookType,
     isFetching: true,
-    pageSize: 10,
+    pageSize: 40,
+    hasMore: false,
     currentPage: 1,
     totalBooksCount: 0,
     searchBooksCount: 0,
@@ -49,6 +51,10 @@ const booksReducer = createSlice({
         setPageSize: (state, action) => {
             state.pageSize = action.payload.pageSize;
             console.log(state.isFetching, 'action pageSize')
+        },
+        setHasMore: (state, action) => {
+            state.hasMore = action.payload.hasMore;
+            console.log(state.hasMore, 'action hasMore')
         },
         setCurrentPage: (state, action) => {
             state.currentPage = action.payload.currentPage;
@@ -127,6 +133,7 @@ export const {
     setBook,
     setToggleIsFetching,
     setPageSize,
+    setHasMore,
     setCurrentPage,
     setTotalBooksCount,
     setSearchBooksCount,
@@ -149,6 +156,7 @@ export const {
 export default booksReducer.reducer
 
 export const getBooksPage = ({
+                                 allBooks,
                                  currentPage,
                                  q,
                                  q_optional,
@@ -167,8 +175,27 @@ export const getBooksPage = ({
                              }: searchBooksType)
     : any => async (dispatch: any) => {
     dispatch(setToggleIsFetching({isFetching: true}));
-console.log('dispatch page', q)
-    const data = await booksApi.getAllBooksPage({
+
+    // if (data.items && typeof data.items !== 'undefined')
+
+    let arr = [] as Array<bookType>
+    // const data = await booksApi.getAllBooksPage({
+    //     q,
+    //     q_optional,
+    //     download,
+    //     filter,
+    //     langRestrict,
+    //     libraryRestrict,
+    //     startIndex,
+    //     maxResults,
+    //     printType,
+    //     projection,
+    //     orderBy,
+    //     partner,
+    //     showPreorders,
+    //     source
+    // } as searchBooksType)
+    await booksApi.getAllBooksPage({
         q,
         q_optional,
         download,
@@ -183,30 +210,51 @@ console.log('dispatch page', q)
         partner,
         showPreorders,
         source
-    } as searchBooksType);
+    } as searchBooksType).then((res) => {
+        if (allBooks.length === startIndex) {
+            allBooks.map((b: bookType) => arr.push(b))
+            if (startIndex === 0) {
+                dispatch(setSearchBooksCount({searchBooksCount: Number(res.totalItems)}));
+                dispatch(setAllBooks({allBooks: res.items}));
+            } else if (startIndex !== 0) {
+                res.items.map((b: bookType) => arr.push(b))
+                dispatch(setAllBooks({allBooks: arr}));
+            }
+        }
+            // if (Number(res.totalItems) > (startIndex + 40)) {
+            //     dispatch(setStartIndex({startIndex: (startIndex + 40)}))
+            //     dispatch(setHasMore({hasMore: true}))
+            // } else {
+            //     dispatch(setStartIndex({startIndex: 0}))
+            //     dispatch(setHasMore({hasMore: false}))
+            // }
+        // } else {
+            if (Number(res.totalItems) > (startIndex + 40)) {
+        //         dispatch(setStartIndex({startIndex: (startIndex + 40)}))
+                dispatch(setHasMore({hasMore: true}))
+            } else {
+        //         dispatch(setStartIndex({startIndex: 0}))
+                dispatch(setHasMore({hasMore: false}))
+            }
+        // }
+    })
 
-    console.log(data, 'data')
-    // if (data.items && typeof data.items !== 'undefined') {
+    // dispatch(setCurrentPage({currentPage: currentPage}));
+    // dispatch(setQ({q: q}));
+    // dispatch(setQ_optional({q_optional: q_optional}));
+    // dispatch(setDownload({download: download}));
+    // dispatch(setFilter({filter: filter}));
+    // dispatch(setLangRestrict({langRestrict: langRestrict}));
+    // dispatch(setLibraryRestrict({libraryRestrict: libraryRestrict}));
+    // dispatch(setStartIndex({startIndex: startIndex}));
+    // dispatch(setMaxResults({maxResults: maxResults}));
+    // dispatch(setPrintType({printType: printType}));
+    // dispatch(setProjection({projection: projection}));
+    // dispatch(setOrderBy({orderBy: orderBy}));
+    // dispatch(setPartner({partner: partner}));
+    // dispatch(setShowPreorders({showPreorders: showPreorders}));
+    // dispatch(setSource({source: source}));
 
-        dispatch(setAllBooks({allBooks: data.items}));
-        dispatch(setSearchBooksCount({searchBooksCount: Number(data.totalItems)}));
-        // dispatch(setCurrentPage({currentPage: currentPage}));
-        // dispatch(setQ({q: q}));
-        // dispatch(setQ_optional({q_optional: q_optional}));
-        // dispatch(setDownload({download: download}));
-        // dispatch(setFilter({filter: filter}));
-        // dispatch(setLangRestrict({langRestrict: langRestrict}));
-        // dispatch(setLibraryRestrict({libraryRestrict: libraryRestrict}));
-        // dispatch(setStartIndex({startIndex: startIndex}));
-        // dispatch(setMaxResults({maxResults: maxResults}));
-        // dispatch(setPrintType({printType: printType}));
-        // dispatch(setProjection({projection: projection}));
-        // dispatch(setOrderBy({orderBy: orderBy}));
-        // dispatch(setPartner({partner: partner}));
-        // dispatch(setShowPreorders({showPreorders: showPreorders}));
-        // dispatch(setSource({source: source}));
-
-    // }
     // setBook, setDeleteBook, setTotalBooksCount
     dispatch(setToggleIsFetching({isFetching: false}));
 };

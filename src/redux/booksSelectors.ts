@@ -12,6 +12,9 @@ export const getIsFetching = (state: RootStateType) => {
 export const getPageSize = (state: RootStateType) => {
     return state.booksState.pageSize
 }
+export const getHasMore = (state: RootStateType) => {
+    return state.booksState.hasMore
+}
 export const getCurrentPage = (state: RootStateType) => {
     return state.booksState.currentPage
 }

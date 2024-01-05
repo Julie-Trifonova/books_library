@@ -14,6 +14,7 @@ type PropsType = {
 }
 
 export type searchBooksType = {
+    allBooks: Array<bookType>,
     currentPage: number,
     q: string,
     q_optional: string,

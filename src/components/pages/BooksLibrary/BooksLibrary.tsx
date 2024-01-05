@@ -16,11 +16,11 @@ import {
     getProjection,
     getQ, getShowPreorders, getSource,
     getStartIndex,
-    getTotalBooksCount, getSearchBooksCount, getPageSize
+    getTotalBooksCount, getSearchBooksCount, getPageSize, getHasMore
 } from "../../../redux/booksSelectors";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Preloader} from "../../../assets/common/Preloader/Preloader";
-import {getBooksPage, setCurrentPage} from "../../../redux/booksReducer";
+import {getBooksPage, setCurrentPage, setHasMore, setStartIndex} from "../../../redux/booksReducer";
 import {searchBooksType, SearchForm} from "../../SearchForm/SearchForm";
 import {bookType} from "../../../types/types";
 import {BookCard} from "../../BooksCard/BookCard";
@@ -28,13 +28,17 @@ import {nanoid} from 'nanoid'
 import s from './BooksLibrary.module.css'
 import {usePagination} from "../../../assets/common/usePagination/usePagination";
 import {Box, List, Pagination} from "@mui/material";
+import InfiniteScroll from "react-infinite-scroll-component";
+import gif from "../../../assets/common/images/giphy_3.gif";
 
 const BooksLibrary = () => {
 
+    const [page, setPage] = useState(1)
     const allBooks = useSelector(getAllBooks)
     const book = useSelector(getBook)
     const isFetching = useSelector(getIsFetching)
     const pageSize = useSelector(getPageSize)
+    const hasMore = useSelector(getHasMore)
     const totalBooksCount = useSelector(getTotalBooksCount)
     const searchBooksCount = useSelector(getSearchBooksCount)
 
@@ -95,6 +99,7 @@ const BooksLibrary = () => {
     } as unknown as searchBooksType
 
     let propsPage = {
+        allBooks,
         currentPage,
         q,
         q_optional,
@@ -122,6 +127,7 @@ const BooksLibrary = () => {
         }
     }, [
         useEffect,
+        startIndex,
     ])
 
     useEffect(() => {
@@ -155,7 +161,6 @@ const BooksLibrary = () => {
         // navigate({
         //     search: `currentPage=${currentPage}&q=${q}&+${q_optional}&download=${download}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&?key=${process.env.REACT_APP_API_KEY}`
         // })
-
         // dispatch(getBooksPage(propsPage));
     }, [
         navigate,
@@ -163,16 +168,56 @@ const BooksLibrary = () => {
 
     // let [currentPageNumber, setCurrentPageNumber] = useState(1);
 
-    const count = Math.ceil(maxResults / pageSize);
-    const _DATA = usePagination(allBooks, pageSize, startIndex); // проверить работоспособность при изменении к-ва страниц в форме. Возможно добавить selector в usePagination
+    // const count = Math.ceil(maxResults / pageSize);
+    const count = Math.ceil(searchBooksCount / pageSize);
+    const _DATA = usePagination(allBooks, pageSize, searchBooksCount);
 
-    const handleChange = (e: any, p: number) => {
-        dispatch(setCurrentPage(p));
-        _DATA.jump(p);
-    };
+    // const handleChange = (e: any, p: number) => {
+    //     dispatch(setStartIndex({startIndex: startIndex + 39}))
+    //     dispatch(getBooksPage(propsPage))
+    //     dispatch(setCurrentPage({currentPage: p}));
+    //     setPage(p)
+    //     _DATA.jump(p);
+    // };
+
+    const next = () => {
+        if (searchBooksCount > (startIndex + 40)) {
+            dispatch(setStartIndex({startIndex: (startIndex + 40)}))
+            dispatch(getBooksPage(propsPage))
+            // dispatch(setHasMore({hasMore: true}))
+        } else {
+            dispatch(setStartIndex({startIndex: 0}))
+            // dispatch(setHasMore({hasMore: false}))
+        }
+    }
 
     return (
         <div>
+            <InfiniteScroll
+                dataLength={allBooks ? allBooks.length : 0}
+                next={next}
+                hasMore={hasMore}
+                loader={
+                    <div
+                        // className={styles.skeleton_position}
+                    >
+                        <Preloader />
+                    </div>
+                }
+                endMessage={<img
+                    // className={styles.end_gif}
+                    src={gif} alt="gif" />}
+
+                // refreshFunction={this.refresh}
+                // pullDownToRefresh
+                // pullDownToRefreshThreshold={50}
+                // pullDownToRefreshContent={
+                //     <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+                // }
+                // releaseToRefreshContent={
+                //     <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+                // }
+            >
             {isFetching
                 ? <Preloader/>
                 : <div className={s.booksLibrary}>
@@ -192,29 +237,36 @@ const BooksLibrary = () => {
                                     : `Found ${searchBooksCount} results`)
                         }
                     </div>
-                    <Pagination count={count}
-                                size="large"
-                                page={currentPage}
-                                variant="outlined"
-                                shape="rounded"
-                                onChange={handleChange}/>
-                    {/*<List>*/}
+                    {/*<Pagination count={count}*/}
+                    {/*            size="large"*/}
+                    {/*            page={page}*/}
+                    {/*            variant="outlined"*/}
+                    {/*            shape="rounded"*/}
+                    {/*            onChange={handleChange}*/}
+                    {/*/>*/}
                     <div className={s.books}>
                         {
-                            _DATA.currentData()
-                            && (_DATA.currentData().length > 0)
+                            allBooks
+                            && (allBooks.length > 0)
                             && ((actualDownload === 'epub' || download === 'epub')
-                                ? _DATA.currentData().filter((b: bookType) => !!b.accessInfo.epub.isAvailable)
-                                    .map((b: bookType) => <BookCard key={b.id} book={b}/>)
-                                : (actualDownload === 'pdf' || download === 'pdf') ? _DATA.currentData().filter((b: bookType) => !!b.accessInfo.pdf.isAvailable)
-                                        .map((b: bookType) => <BookCard key={b.id} book={b}/>)
-                                    : _DATA.currentData().map((b: bookType) => <BookCard key={b.id} book={b}/>))
-                            // && allBooks.map((b: bookType) =>
-                            // <BookCard key={b.id} book={b}/>)
+                                ? allBooks.filter((b: bookType) => !!b.accessInfo.epub.isAvailable)
+                                    .map((b: bookType) => <BookCard key={nanoid()} book={b}/>)
+                                : (actualDownload === 'pdf' || download === 'pdf') ? allBooks.filter((b: bookType) => !!b.accessInfo.pdf.isAvailable)
+                                        .map((b: bookType) => <BookCard key={nanoid()} book={b}/>)
+                                    : allBooks.map((b: bookType) => <BookCard key={nanoid()} book={b}/>)) //key = {b.id}
+                            // _DATA.currentData()
+                            // && (_DATA.currentData().length > 0)
+                            // && ((actualDownload === 'epub' || download === 'epub')
+                            //     ? _DATA.currentData().filter((b: bookType) => !!b.accessInfo.epub.isAvailable)
+                            //         .map((b: bookType) => <BookCard key={b.id} book={b}/>)
+                            //     : (actualDownload === 'pdf' || download === 'pdf') ? _DATA.currentData().filter((b: bookType) => !!b.accessInfo.pdf.isAvailable)
+                            //             .map((b: bookType) => <BookCard key={b.id} book={b}/>)
+                            //         : _DATA.currentData().map((b: bookType) => <BookCard key={b.id} book={b}/>))
                         }
                     </div>
                 </div>
             }
+            </InfiniteScroll>
         </div>
     )
 }
