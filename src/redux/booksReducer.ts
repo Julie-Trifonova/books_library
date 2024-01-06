@@ -259,3 +259,9 @@ export const getBooksPage = ({
 //     // await booksApi.updatePage(formData);
 // };
 
+export const getCurrentBook = (documentId: string) : any => async (dispatch: any) => {
+    dispatch(setToggleIsFetching({isFetching: true}));
+    const book = await booksApi.getBook(documentId)
+    dispatch(setBook({book: book}))
+    dispatch(setToggleIsFetching({isFetching: false}));
+}

@@ -1,5 +1,6 @@
 import {instance} from "./api";
 import {searchBooksType} from "../components/SearchForm/SearchForm";
+import {bookType} from "../types/types";
 
 export const booksApi = {
     getAllBooksPage (
@@ -9,8 +10,15 @@ export const booksApi = {
     //     const url = `v1/volumes/?q=${q}+${q_optional}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&key=${process.env.REACT_APP_API_KEY}`
         const url = `v1/volumes/?q=${q}&startIndex=${startIndex}&maxResults=${40}&key=${process.env.REACT_APP_API_KEY}`
         return instance.get(url).then((response) => response.data);
-    }
+    },
     // https://books.googleapis.com/books/v1/volumes/?q=${q}&maxResults=60&key=AIzaSyBZtv8srRXwPC-CliYEIZ7Td_6YfziHvl8
+    // https://books.googleapis.com/books/v1/volumes/26PifW3IXHcC?&key=AIzaSyBZtv8srRXwPC-CliYEIZ7Td_6YfziHvl8
+    // 26PifW3IXHcC
+// v1/volumes/volumeId?key=
+    getBook (bookId: string) {
+        const url = `v1/volumes/${bookId}?&key=${process.env.REACT_APP_API_KEY}`
+        return instance.get(url).then((response) => response.data);
+    }
 }
 
 // Выполнение поиска не требует аутентификации,

@@ -28,40 +28,41 @@ export type volumeInfoType = {
 }
 
 export type saleInfo = {
-    country: string;
-    saleability: string;
-    isEbook: boolean;
-    listPrice: {
-        amount: number,
-        currencyCode: string,
+    country?: string;
+    saleability?: string;
+    isEbook?: boolean;
+    listPrice?: {
+        amount?: number,
+        currencyCode?: string,
     },
-    retailPrice: {
-        amount: number,
-        currencyCode: string,
+    retailPrice?: {
+        amount?: number,
+        currencyCode?: string,
     },
-    buyLink: string;
+    buyLink?: string;
 }
 
 export type accessInfo = {
-    country: string;
-    viewability: string; //"PARTIAL",
-    embeddable: boolean;
-    publicDomain: boolean;
-    textToSpeechPermission: string;
+    country?: string;
+    viewability?: string; //"PARTIAL",
+    embeddable?: boolean;
+    publicDomain?: boolean;
+    textToSpeechPermission?: string;
     epub: {
-        isAvailable: boolean,
-        acsTokenLink: string,
+        isAvailable?: boolean,
+        acsTokenLink?: string,
     };
     pdf: {
-        isAvailable: false
+        isAvailable?: boolean,
+        acsTokenLink?: string,
     };
-    webReaderLink: string;
-    accessViewStatus: string;
-    quoteSharingAllowed: boolean;
+    webReaderLink?: string;
+    accessViewStatus?: string;
+    quoteSharingAllowed?: boolean;
 }
 
 export type searchInfo = {
-    textSnippet: string;
+    textSnippet?: string;
 }
 
 
