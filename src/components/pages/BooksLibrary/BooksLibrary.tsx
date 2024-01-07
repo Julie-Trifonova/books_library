@@ -26,14 +26,11 @@ import {bookType} from "../../../types/types";
 import {BookCard} from "../../BooksCard/BookCard";
 import {nanoid} from 'nanoid'
 import s from './BooksLibrary.module.css'
-import {usePagination} from "../../../assets/common/usePagination/usePagination";
-import {Box, List, Pagination} from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import gif from "../../../assets/common/images/giphy_3.gif";
 
 const BooksLibrary = () => {
 
-    const [page, setPage] = useState(1)
     const allBooks = useSelector(getAllBooks)
     const book = useSelector(getBook)
     const isFetching = useSelector(getIsFetching)
@@ -158,10 +155,10 @@ const BooksLibrary = () => {
     ])
 
     useEffect(() => {
-        // navigate({
-        //     search: `currentPage=${currentPage}&q=${q}&+${q_optional}&download=${download}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&?key=${process.env.REACT_APP_API_KEY}`
-        // })
-        // dispatch(getBooksPage(propsPage));
+        navigate({
+            search: `currentPage=${currentPage}&q=${q}&+${q_optional}&download=${download}&filter=${filter}&langRestrict=${langRestrict}&libraryRestrict=${libraryRestrict}&startIndex=${startIndex}&maxResults=${maxResults}&printType=${printType}&projection=${projection}&orderBy=${orderBy}&partner=${partner}&showPreorders=${showPreorders}&source=${source}&?key=${process.env.REACT_APP_API_KEY}`
+        })
+        dispatch(getBooksPage(propsPage));
     }, [
         navigate,
     ])

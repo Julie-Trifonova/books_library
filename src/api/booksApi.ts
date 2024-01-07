@@ -12,21 +12,12 @@ export const booksApi = {
         return instance.get(url).then((response) => response.data);
     },
     // https://books.googleapis.com/books/v1/volumes/?q=${q}&maxResults=60&key=AIzaSyBZtv8srRXwPC-CliYEIZ7Td_6YfziHvl8
-    // https://books.googleapis.com/books/v1/volumes/26PifW3IXHcC?&key=AIzaSyBZtv8srRXwPC-CliYEIZ7Td_6YfziHvl8
-    // 26PifW3IXHcC
-// v1/volumes/volumeId?key=
+
     getBook (bookId: string) {
         const url = `v1/volumes/${bookId}?&key=${process.env.REACT_APP_API_KEY}`
         return instance.get(url).then((response) => response.data);
     }
 }
-
-// Выполнение поиска не требует аутентификации,
-// поэтому вам не нужно предоставлять HTTP-заголовок
-// Authorization вместе с запросом GET .
-// Однако, если вызов выполняется с аутентификацией,
-// каждый том будет содержать информацию о пользователе,
-// такую ​​как статус покупки.
 
 
 // langRestrict: Ограничить результаты книгами с этим языковым кодом
@@ -34,11 +25,6 @@ export const booksApi = {
 // libraryRestrict:
 //                 my-library - Ограничить библиотекой пользователя, любой полкой.
 //                 no-restrict
-
-// startIndex — позиция в коллекции, с которой следует начать.
-//     Индекс первого элемента равен 0.
-
-// maxResults — по умолчанию — 10, а максимально — 40.
 
 // printType:
 //     all — не ограничивается типом печати (по умолчанию).
@@ -61,10 +47,3 @@ export const booksApi = {
 
 // source	string	Строка для идентификации отправителя этого запроса.
 
-
-
-// Получение определенного тома
-// v1/volumes/volumeId?key=
-//     если вызов выполняется с аутентификацией,
-//     объем будет включать информацию о пользователе,
-//     такую как статус покупки.

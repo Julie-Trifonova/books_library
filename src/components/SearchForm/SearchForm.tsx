@@ -3,7 +3,15 @@ import s from "./SearchForm.module.css";
 import {Checkbox, TextField} from "@mui/material";
 import {bookType} from "../../types/types";
 import {useDispatch} from "react-redux";
-import {getBooksPage, setDownload, setFilter, setQ, setQ_optional} from "../../redux/booksReducer";
+import {
+    getBooksPage,
+    setAllBooks,
+    setDownload,
+    setFilter,
+    setQ,
+    setQ_optional,
+    setStartIndex
+} from "../../redux/booksReducer";
 import {reduxForm} from "redux-form";
 import {useLocation, useNavigate} from "react-router-dom";
 import {DropdownList} from "../DropdownList";
@@ -82,6 +90,7 @@ const SearchForm: React.FC<PropsType> = ({allBooks}) => {
         setInputQ(inputData)
     }
     const newQProps = {
+        allBooks: [],
         currentPage: 1,
         q: inputQ,
         q_optional: inputQOptional,
@@ -120,9 +129,11 @@ const SearchForm: React.FC<PropsType> = ({allBooks}) => {
 
     const onSubmit = () => {
         dispatch(setQ({q: newQProps.q}))
+        dispatch(setAllBooks({allBooks: newQProps.allBooks}))
         dispatch(setQ_optional({q_optional: newQProps.q_optional}))
         dispatch(setDownload({download: newQProps.download}))
         dispatch(setFilter({filter: newQProps.filter}))
+        dispatch(setStartIndex({startIndex: newQProps.startIndex}))
         dispatch(getBooksPage(newQProps))
 
         // dispatch(getBooksPage(newQProps))

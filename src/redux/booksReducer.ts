@@ -198,6 +198,7 @@ export const getBooksPage = ({
     // dispatch(setSearchBooksCount({searchBooksCount: Number(data.totalItems)}));
 
     let arr = [] as Array<bookType>
+    console.log('allBooks, startIndex', allBooks, startIndex)
     await booksApi.getAllBooksPage({
         q,
         q_optional,
@@ -214,7 +215,7 @@ export const getBooksPage = ({
         showPreorders,
         source
     } as searchBooksType).then((res) => {
-        if (allBooks.length === startIndex) {
+        if (allBooks && allBooks.length === startIndex) {
             allBooks.map((b: bookType) => arr.push(b))
             if (startIndex === 0) {
                 dispatch(setSearchBooksCount({searchBooksCount: Number(res.totalItems)}));
@@ -228,7 +229,7 @@ export const getBooksPage = ({
             } else {
                 dispatch(setHasMore({hasMore: false}))
             }
-        } else if(allBooks.length < startIndex) {
+        } else if(allBooks && allBooks.length < startIndex) {
             dispatch(setHasMore({hasMore: false}))
         }
     })
