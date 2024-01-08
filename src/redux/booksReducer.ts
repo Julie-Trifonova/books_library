@@ -200,9 +200,7 @@ export const getBooksPage = ({
             if (startIndex === 0) {
                 dispatch(setSearchBooksCount({searchBooksCount: Number(res.totalItems)}));
                 dispatch(setAllBooks({allBooks: res.items}));
-                if (res.items.length >= 40) {
-                    dispatch(setStartIndex({startIndex: (startIndex + 40)}))
-                }
+                dispatch(setStartIndex({startIndex: (startIndex + 40)}))
             } else if (startIndex !== 0) {
                 res.items.map((b: bookType) => arr.push(b))
                 dispatch(setAllBooks({allBooks: arr}));
