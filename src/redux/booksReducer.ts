@@ -2,7 +2,6 @@ import {bookType} from "../types/types";
 import {createSlice} from "@reduxjs/toolkit";
 import {booksApi} from "../api/booksApi";
 import {searchBooksType} from "../components/SearchForm/SearchForm";
-import {all} from "axios";
 
 let initialState = {
     allBooks: [] as Array<bookType>,
@@ -178,27 +177,8 @@ export const getBooksPage = ({
 
     // if (data.items && typeof data.items !== 'undefined')
 
-    // const data = await booksApi.getAllBooksPage({
-    //     q,
-    //     q_optional,
-    //     download,
-    //     filter,
-    //     langRestrict,
-    //     libraryRestrict,
-    //     startIndex,
-    //     maxResults,
-    //     printType,
-    //     projection,
-    //     orderBy,
-    //     partner,
-    //     showPreorders,
-    //     source
-    // } as searchBooksType)
-    // dispatch(setAllBooks({allBooks: data.items}));
-    // dispatch(setSearchBooksCount({searchBooksCount: Number(data.totalItems)}));
-
     let arr = [] as Array<bookType>
-    console.log('allBooks, startIndex', allBooks, startIndex)
+    console.log('allBooks, startIndex', initialState.startIndex, allBooks, startIndex)
     await booksApi.getAllBooksPage({
         q,
         q_optional,
@@ -229,28 +209,11 @@ export const getBooksPage = ({
             } else {
                 dispatch(setHasMore({hasMore: false}))
             }
-        } else if(allBooks && allBooks.length < startIndex) {
+        } else if (allBooks && allBooks.length < startIndex) {
             dispatch(setHasMore({hasMore: false}))
         }
     })
 
-    // dispatch(setCurrentPage({currentPage: currentPage}));
-    // dispatch(setQ({q: q}));
-    // dispatch(setQ_optional({q_optional: q_optional}));
-    // dispatch(setDownload({download: download}));
-    // dispatch(setFilter({filter: filter}));
-    // dispatch(setLangRestrict({langRestrict: langRestrict}));
-    // dispatch(setLibraryRestrict({libraryRestrict: libraryRestrict}));
-    // dispatch(setStartIndex({startIndex: startIndex}));
-    // dispatch(setMaxResults({maxResults: maxResults}));
-    // dispatch(setPrintType({printType: printType}));
-    // dispatch(setProjection({projection: projection}));
-    // dispatch(setOrderBy({orderBy: orderBy}));
-    // dispatch(setPartner({partner: partner}));
-    // dispatch(setShowPreorders({showPreorders: showPreorders}));
-    // dispatch(setSource({source: source}));
-
-    // setBook, setDeleteBook, setTotalBooksCount
     dispatch(setToggleIsFetching({isFetching: false}));
 };
 
@@ -260,7 +223,7 @@ export const getBooksPage = ({
 //     // await booksApi.updatePage(formData);
 // };
 
-export const getCurrentBook = (documentId: string) : any => async (dispatch: any) => {
+export const getCurrentBook = (documentId: string): any => async (dispatch: any) => {
     dispatch(setToggleIsFetching({isFetching: true}));
     const book = await booksApi.getBook(documentId)
     dispatch(setBook({book: book}))

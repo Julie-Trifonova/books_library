@@ -128,13 +128,14 @@ const BooksLibrary = () => {
     ])
 
     useEffect(() => {
-        if (actualQ && actualQ !== q) {
-            navigate({
-                search: `currentPage=${actualCurrentPage}&q=${actualQ}&+${actualQ_optional}&download=${actualDownload}&filter=${actualFilter}&langRestrict=${actualLangRestrict}&libraryRestrict=${actualLibraryRestrict}&startIndex=${actualStartIndex}&maxResults=${actualMaxResults}&printType=${actualPrintType}&projection=${actualProjection}&orderBy=${orderBy}&partner=${actualPartner}&showPreorders=${actualShowPreorders}&source=${actualSource}&?key=${process.env.REACT_APP_API_KEY}`
-            })
-            dispatch(getBooksPage(actualPropsPage));
-            console.log('effect 2', actualQ, q, actualPropsPage)
-        }
+        // if (actualQ && actualQ !== q) {
+        //     navigate({
+        //         search: `currentPage=${actualCurrentPage}&q=${actualQ}&+${actualQ_optional}&download=${actualDownload}&filter=${actualFilter}&langRestrict=${actualLangRestrict}&libraryRestrict=${actualLibraryRestrict}&startIndex=${actualStartIndex}&maxResults=${actualMaxResults}&printType=${actualPrintType}&projection=${actualProjection}&orderBy=${orderBy}&partner=${actualPartner}&showPreorders=${actualShowPreorders}&source=${actualSource}&?key=${process.env.REACT_APP_API_KEY}`
+        //     })
+        //     dispatch(getBooksPage(actualPropsPage));
+        //     dispatch(setStartIndex({startIndex: actualStartIndex}));
+        //     console.log('effect 2', actualQ, q, actualPropsPage)
+        // }
     }, [
         useEffect,
         actualCurrentPage,
@@ -179,10 +180,10 @@ const BooksLibrary = () => {
     // };
 
     const next = () => {
-        if (searchBooksCount > (startIndex + 40)) {
+        if (searchBooksCount >= (startIndex + 40)) {
             dispatch(setStartIndex({startIndex: (startIndex + 40)}))
             dispatch(getBooksPage(propsPage))
-        } else {
+        } else if (searchBooksCount < (startIndex + 40)) {
             dispatch(setStartIndex({startIndex: 0}))
         }
     }
